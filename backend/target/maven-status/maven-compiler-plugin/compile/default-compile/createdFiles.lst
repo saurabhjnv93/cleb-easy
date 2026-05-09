@@ -1,0 +1,10 @@
+com/celebeasy/backend/AuthController$ErrorResponse.class
+com/celebeasy/backend/User$Role.class
+com/celebeasy/backend/AuthController$AuthResponse.class
+com/celebeasy/backend/AuthService.class
+com/celebeasy/backend/AuthController.class
+com/celebeasy/backend/AuthController$SignupRequest.class
+com/celebeasy/backend/AuthController$LoginRequest.class
+com/celebeasy/backend/User.class
+com/celebeasy/backend/BackendApplication.class
+com/celebeasy/backend/UserRepository.class
