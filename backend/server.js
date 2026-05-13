@@ -17,18 +17,45 @@ import rateLimiter from './src/middleware/rateLimiter.js';
 
 dotenv.config();
 
+const parseAllowedOrigins = () => {
+  const raw = (process.env.FRONTEND_URL || '').trim();
+  const fallback =
+    process.env.NODE_ENV === 'production'
+      ? 'https://cleb-easy.onrender.com'
+      : 'http://localhost:5173';
+  const source = raw || fallback;
+  return source
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+};
+
+const allowedOrigins = parseAllowedOrigins();
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
   }
 });
 
 connectDB();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
+    credentials: true
+  })
+);
 app.use(helmet());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
